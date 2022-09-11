@@ -43,7 +43,7 @@ na_counts = function(df){
 
 histogram = function(df,colname,inpbins){
   
-  ggplot(df, aes(df[,colname])) + geom_histogram(bins = inpbins)
+  ggplot(df, aes(df[,colname])) + geom_histogram(bins = inpbins) + xlab(colname)
 
 }
 
@@ -51,13 +51,14 @@ histogram = function(df,colname,inpbins){
 
 my_boxplot = function(df,colname){
   
-  ggplot(df, aes(df[,colname])) + geom_boxplot() + coord_flip()
+  ggplot(df, aes(df[,colname])) + geom_boxplot() + coord_flip() + xlab(colname)
  
 }
 
 #------- Ejercicio 8 --------
 my_qqplot = function(df,colname){
   
-  ggplot(df, mapping = aes(sample = df[,colname]))  + stat_qq_band() + stat_qq_line() + stat_qq_point()
+  ggplot(df, mapping = aes(sample = df[,colname]))  + stat_qq_band() + stat_qq_line() + stat_qq_point() + labs(x = "Theoretical Quantiles", y = "Sample Quantiles")
+
   
 }

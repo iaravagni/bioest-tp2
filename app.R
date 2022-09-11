@@ -45,7 +45,7 @@ ui <- dashboardPage(
                              choices = c(Coma = ",",
                                          PuntoYcoma = ";",
                                          Tab = "\t"),
-                             selected = ","),
+                             selected = ";"),
                 tags$hr(),
                 
                 # Input: Select number of rows to display ----
