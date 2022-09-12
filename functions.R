@@ -7,7 +7,6 @@ library(ggpubr)
 read_file = function(datapath,header,sep){
   
   file <- read.csv(datapath, sep=sep, header=header)
-  #file$Dieta <- as.factor(file$Dieta)
   return(file)
   
 }
@@ -43,9 +42,11 @@ na_counts = function(df){
 
 histogram = function(df,colname,inpbins){
   
-  ggplot(df, aes(df[,colname])) + geom_histogram(bins = inpbins) + xlab(colname)
+  ggplot(df, aes(df[,colname])) + geom_histogram(aes(y = ..density..), bins = inpbins) + xlab(colname) + 
+    stat_function(fun = dnorm, args = list(mean = mean(na.omit(df[,colname])), sd = sd(na.omit(df[,colname]))))
 
-}
+}  
+
 
 # ------ Ejercicio 7 --------
 
