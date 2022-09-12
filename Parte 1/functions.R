@@ -1,5 +1,6 @@
 library(ggplot2)
 library(ggpubr)
+library(qqplotr)
 
 
 # ---------------- Ejercicio 1 ----------------
