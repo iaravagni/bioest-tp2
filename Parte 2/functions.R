@@ -119,12 +119,12 @@ shapiro_w = function(df,colname,groupcol){
     
   } else {
     
-    data = split(df, df$Preparado)
+    data = split(df, df[,groupcol])
     dataG1 = data[[1]]
     dataG2 = data[[2]]
     
-    shapiro1 = shapiro.test(as.numeric(dataG1$Betacaroteno))
-    shapiro2 = shapiro.test(as.numeric(dataG2$Betacaroteno))
+    shapiro1 = shapiro.test(as.numeric(dataG1[,colname]))
+    shapiro2 = shapiro.test(as.numeric(dataG2[,colname]))
 
     return(list(shapiro1 = shapiro1, shapiro2 = shapiro2))
     }
@@ -140,12 +140,12 @@ lilliefors = function(df,colname,groupcol){
     
   } else {
     
-    data = split(df, df$Preparado)
+    data = split(df, df[,groupcol])
     dataG1 = data[[1]]
     dataG2 = data[[2]]
     
-    lillie1 = lillie.test(as.numeric(dataG1$Betacaroteno))
-    lillie2 = lillie.test(as.numeric(dataG2$Betacaroteno))
+    lillie1 = lillie.test(as.numeric(dataG1[,colname]))
+    lillie2 = lillie.test(as.numeric(dataG2[,colname]))
     
     return(list(lillie1 = lillie1, lillie2 = lillie2))
   }
@@ -156,7 +156,7 @@ lilliefors = function(df,colname,groupcol){
 # --------- Test de Levene ---------
 levene = function(df, colname, groupcol){
   
-  return(leveneTest(y = df$Betacaroteno, group = df$Preparado))
+  return(leveneTest(y = df[,colname], group = df[,groupcol]))
 }
     
 
@@ -164,11 +164,11 @@ levene = function(df, colname, groupcol){
 
 my_test = function(df,colname,groupcol){
   
-  data = split(df, df$Preparado)
+  data = split(df, df[,groupcol])
   dataG1 = data[[1]]
   dataG2 = data[[2]]
   
-  return(t.test(dataG1$Betacaroteno, dataG2$Betacaroteno,
+  return(t.test(dataG1[,colname], dataG2[,colname],
                        paired = FALSE, alternative = "two.sided"))
   
 }
