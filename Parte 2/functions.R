@@ -64,22 +64,7 @@ histogram = function(df,groupcol,colname,inpbins){
     
   } else {
     
-    levels <- unique(df[,groupcol])
-    
-    dat <- data.frame()
-    dat_val <- rep()
-    
-    for (n in levels){
-      df_aux <- df[df[,groupcol] == n,]
-      df_aux <- df_aux[,colname]
-      dat_val <- append(dat_val, rep(df_aux))
-      
-    }
-    
-    dat <- data.frame(variable = levels,
-                     value= dat_val)
-    
-    ggplot(dat, aes(x=value, fill=variable)) +
+    ggplot(df, aes(df[,colname], fill=df[,groupcol])) +
       geom_histogram(aes(y = ..density..), alpha = 0.6, bins = inpbins) +
       xlab(colname)
       #stat_function(fun = dnorm, args = list(mean = mean(na.omit(df0[,colname])), sd = sd(na.omit(df0[,colname]))))
@@ -99,22 +84,7 @@ my_boxplot = function(df,colname,groupcol){
     
   } else {
     
-    levels <- unique(df[,groupcol])
-    
-    dat <- data.frame()
-    dat_val <- rep()
-    
-    for (n in levels){
-      df_aux <- df[df[,groupcol] == n,]
-      df_aux <- df_aux[,colname]
-      dat_val <- append(dat_val, rep(df_aux))
-      
-    }
-    
-    dat <- data.frame(variable = levels,
-                      value= dat_val)
-    
-    ggplot(dat, aes(x=value, fill=variable)) +
+    ggplot(df, aes(df[,colname], fill=df[,groupcol])) +
       geom_boxplot(alpha = 0.6) +
       xlab(colname)
   }
@@ -132,22 +102,7 @@ my_qqplot = function(df,colname,groupcol){
     
   } else {
     
-    levels <- unique(df[,groupcol])
-    
-    dat <- data.frame()
-    dat_val <- rep()
-    
-    for (n in levels){
-      df_aux <- df[df[,groupcol] == n,]
-      df_aux <- df_aux[,colname]
-      dat_val <- append(dat_val, rep(df_aux))
-      
-    }
-    
-    dat <- data.frame(variable = levels,
-                      value= dat_val)
-    
-    ggplot(dat, aes(sample=value, fill=variable)) +
+    ggplot(df, aes(sample=df[,colname], fill=df[,groupcol])) +
       stat_qq_band(aplha = 0.5) + stat_qq_line() + stat_qq_point() +
       xlab(colname)
   }
@@ -157,21 +112,63 @@ my_qqplot = function(df,colname,groupcol){
 
 # ----------- SHAPIRO _ WILK ---------------
 shapiro_w = function(df,colname,groupcol){
- 
+  
+  if (groupcol == 'No agrupar'){
+    
+    return(shapiro.test(df[,colname]))
+    
+  } else {
+    
+    data = split(df, df$Preparado)
+    dataG1 = data[[1]]
+    dataG2 = data[[2]]
+    
+    shapiro1 = shapiro.test(as.numeric(dataG1$Betacaroteno))
+    shapiro2 = shapiro.test(as.numeric(dataG2$Betacaroteno))
+
+    return(list(shapiro1 = shapiro1, shapiro2 = shapiro2))
+    }
+    
 }
 
 # --------- Lilliefors -------------
 lilliefors = function(df,colname,groupcol){
   
+  if (groupcol == 'No agrupar'){
+    
+    return(shapiro.test(df[,colname]))
+    
+  } else {
+    
+    data = split(df, df$Preparado)
+    dataG1 = data[[1]]
+    dataG2 = data[[2]]
+    
+    lillie1 = lillie.test(as.numeric(dataG1$Betacaroteno))
+    lillie2 = lillie.test(as.numeric(dataG2$Betacaroteno))
+    
+    return(list(lillie1 = lillie1, lillie2 = lillie2))
+  }
+  
 }
+
 
 # --------- Test de Levene ---------
 levene = function(df, colname, groupcol){
- 
+  
+  return(leveneTest(y = df$Betacaroteno, group = df$Preparado))
 }
+    
 
-
-# ------ Test ... ---------
+# ------ Test t ---------
 
 my_test = function(df,colname,groupcol){
+  
+  data = split(df, df$Preparado)
+  dataG1 = data[[1]]
+  dataG2 = data[[2]]
+  
+  return(t.test(dataG1$Betacaroteno, dataG2$Betacaroteno,
+                       paired = FALSE, alternative = "two.sided"))
+  
 }
