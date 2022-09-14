@@ -107,8 +107,6 @@ my_qqplot = function(df,colname,groupcol){
       stat_qq_band(aplha = 0.5) + stat_qq_line() + stat_qq_point() +
       xlab(colname)
   }
-  
-  
 }
 
 # ----------- SHAPIRO _ WILK ---------------
@@ -177,7 +175,7 @@ my_test = function(df,colname,groupcol){
 # --------- Tabla de contingencia ----------
 contingency = function(df,colname1,colname2){
 
-  tabla = table(df$colname1,df$colname2,dnn=c("Cuidado","Madre"))
+  tabla = table(df[,colname1],df[,colname2],dnn=c("Cuidado","Madre"))
   colnames(tabla)<-c("Mayor de edad","Adolescente")
   rownames(tabla)<-c("Si","No")
   tabla
@@ -185,24 +183,27 @@ contingency = function(df,colname1,colname2){
 
 # ---------- Chi 2 --------------
 chicuadrado = function(df, colname1, colname2){
-
+  chisq.test(df[,colname1],df[,colname2])
 }
 
 # -------- Valores esperados ----------
 chisq_expected = function(df,colname1,colname2){
-
+  res = chisq.test(df[,colname1],df[,colname2], correct=FALSE)
+  res[,expected]
   
 }
 
 
 # ----- Residuos  ---------
 chisq_residuals = function(df,colname1,colname2){
-
+  res = chisq.test(df[,colname1],df[,colname2], correct=FALSE)
+  res[,residual]
+  res[,stdres]
 }
 
 # ------ ODDS RATIO CRUDO ----
 odds_r = function(df,colname1,colname2){
-
+  
 }
 
 # ---- ODDS RATIO MANTEL HAENZEL ---------
