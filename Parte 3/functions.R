@@ -7,6 +7,7 @@ library(car)
 library(questionr)
 library(stats)
 library(DescTools)
+library(qqplotr)
 
 # ---------------- Leer csv ----------------
 
@@ -104,7 +105,7 @@ my_qqplot = function(df,colname,groupcol){
   } else {
     
     ggplot(df, aes(sample=df[,colname], fill=df[,groupcol])) +
-      stat_qq_band(aplha = 0.5) + stat_qq_line() + stat_qq_point() +
+      stat_qq_band(alpha = 0.5) + stat_qq_line() + stat_qq_point() +
       xlab(colname)
   }
 }
@@ -174,11 +175,17 @@ my_test = function(df,colname,groupcol){
 
 # --------- Tabla de contingencia ----------
 contingency = function(df,colname1,colname2){
-
-  tabla = table(df[,colname1],df[,colname2],dnn=c("Cuidado","Madre"))
-  colnames(tabla)<-c("Mayor de edad","Adolescente")
-  rownames(tabla)<-c("Si","No")
+  
+  
+  tabla <- table(df[,colname1],df[,colname2])
+  
   tabla
+  
+  
+  #tabla = table(df[,colname1],df[,colname2],dnn=c("Cuidado","Madre"))
+  #colnames(tabla)<-c("Mayor de edad","Adolescente")
+  #rownames(tabla)<-c("Si","No")
+  #tabla
 }
 
 # ---------- Chi 2 --------------
@@ -189,16 +196,14 @@ chicuadrado = function(df, colname1, colname2){
 # -------- Valores esperados ----------
 chisq_expected = function(df,colname1,colname2){
   res = chisq.test(df[,colname1],df[,colname2], correct=FALSE)
-  res[,expected]
-  
+  res$expected
 }
 
 
 # ----- Residuos  ---------
 chisq_residuals = function(df,colname1,colname2){
   res = chisq.test(df[,colname1],df[,colname2], correct=FALSE)
-  res[,residual]
-  res[,stdres]
+  res$stdres
 }
 
 # ------ ODDS RATIO CRUDO ----
