@@ -180,12 +180,6 @@ contingency = function(df,colname1,colname2){
   tabla <- table(df[,colname1],df[,colname2])
   
   tabla
-  
-  
-  #tabla = table(df[,colname1],df[,colname2],dnn=c("Cuidado","Madre"))
-  #colnames(tabla)<-c("Mayor de edad","Adolescente")
-  #rownames(tabla)<-c("Si","No")
-  #tabla
 }
 
 # ---------- Chi 2 --------------
@@ -209,26 +203,50 @@ chisq_residuals = function(df,colname1,colname2){
 # ------ ODDS RATIO CRUDO ----
 odds_r = function(df,colname1,colname2){
   
+  tabla <- table(df[,colname1],df[,colname2])
+  tabla = tabla[2:1, 2:1]
+  
+  oddsratio(tabla)
+  
 }
 
 # ---- ODDS RATIO MANTEL HAENZEL ---------
 odds_r_mh = function(df,colname1,colname2, groupcol){
+  
+  tabla <- table(df[,colname1],df[,colname2], df[,groupcol])
+  addmargins(tabla)[,,c(11,1:10)]
+  
+  mantelhaen.test(tabla)
 
 }
 
 # -------- Tabla de contingencia por estratos --------
 cont_t_s = function(df,colname1,colname2,groupcol){
+  
+  tabla <- table(df[,colname1],df[,colname2], df[,groupcol])
+  addmargins(tabla)[,,c(11,1:10)]
+  
+  tabla
 
 }
 
 
 # ------ ODDS ratio por estrato -----------
 odds_s = function(df,colname1,colname2,groupcol){
-
+  
+  tabla <- table(df[,colname1],df[,colname2], df[,groupcol])
+  addmargins(tabla)[,,c(11,1:10)]
+  
+  oddsratio(tabla)
+  
 }
 
 
 # ------- Breslow-Day Test ------------
 bdt = function(df,colname1,colname2,groupcol){
-
+  
+  tabla <- table(df[,colname1],df[,colname2], df[,groupcol])
+  addmargins(tabla)[,,c(11,1:10)]
+  
+  TestBreslow = BreslowDayTest(x = tabla)
 }
