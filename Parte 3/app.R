@@ -288,8 +288,8 @@ observeEvent(input$do,
               updateSelectInput(session,"group_col_homoced",choices=paste(names(values$df)[sapply(values$df, is.factor)]))
               updateSelectInput(session,"select_categorical1",choices=paste(names(values$df)[sapply(values$df, is.factor)]))
               updateSelectInput(session,"select_categorical2",choices=paste(names(values$df)[sapply(values$df, is.factor)]))
-              updateSelectInput(session,"select_categorical_group",choices=paste(names(values$df)[sapply(values$df, is.factor)]))
-              
+              #updateSelectInput(session,"select_categorical_group",choices=paste(names(values$df)[sapply(values$df, is.factor)]))
+              updateSelectInput(session,"select_categorical_group",choices=paste(names(values$df)))
               
               
                

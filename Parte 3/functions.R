@@ -8,7 +8,8 @@ library(questionr)
 library(stats)
 library(DescTools)
 library(qqplotr)
-
+library(epiR)
+library(epitools)
 # ---------------- Leer csv ----------------
 
 read_file = function(datapath,header,sep){
@@ -206,12 +207,18 @@ odds_r = function(df,colname1,colname2){
   tabla <- table(df[,colname1],df[,colname2])
   tabla = tabla[2:1, 2:1]
   
-  oddsratio(tabla)
+  oddsR = epi.2by2(tabla, method = "case.control",
+                 conf.level = 0.95,
+                 units = 100,
+                 outcome = "as.columns")
+  
+  oddsR[8]
   
 }
 
 # ---- ODDS RATIO MANTEL HAENZEL ---------
 odds_r_mh = function(df,colname1,colname2, groupcol){
+  print('hola!!!!!!!!!!!!!!!!!!!!!!')
   
   tabla <- table(df[,colname1],df[,colname2], df[,groupcol])
   addmargins(tabla)[,,c(11,1:10)]
@@ -237,7 +244,7 @@ odds_s = function(df,colname1,colname2,groupcol){
   tabla <- table(df[,colname1],df[,colname2], df[,groupcol])
   addmargins(tabla)[,,c(11,1:10)]
   
-  oddsratio(tabla)
+  odds.ratio(tabla)
   
 }
 
