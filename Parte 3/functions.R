@@ -218,7 +218,6 @@ odds_r = function(df,colname1,colname2){
 
 # ---- ODDS RATIO MANTEL HAENZEL ---------
 odds_r_mh = function(df,colname1,colname2, groupcol){
-  print('hola!!!!!!!!!!!!!!!!!!!!!!')
   
   tabla <- table(df[,colname1],df[,colname2], df[,groupcol])
   addmargins(tabla)[,,c(11,1:10)]
