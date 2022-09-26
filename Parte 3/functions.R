@@ -10,6 +10,7 @@ library(DescTools)
 library(qqplotr)
 library(epiR)
 library(epitools)
+library(epiDisplay)
 # ---------------- Leer csv ----------------
 
 read_file = function(datapath,header,sep){
@@ -207,43 +208,40 @@ odds_r = function(df,colname1,colname2){
   tabla <- table(df[,colname1],df[,colname2])
   tabla = tabla[2:1, 2:1]
   
-  oddsR = epi.2by2(tabla, method = "case.control",
-                 conf.level = 0.95,
-                 units = 100,
-                 outcome = "as.columns")
   
-  oddsR[8]
+  odds.ratio(tabla)
   
 }
 
 # ---- ODDS RATIO MANTEL HAENZEL ---------
 odds_r_mh = function(df,colname1,colname2, groupcol){
   
-  tabla <- table(df[,colname1],df[,colname2], df[,groupcol])
-  addmargins(tabla)[,,c(11,1:10)]
-  
-  mantelhaen.test(tabla)
+  outcome <- df[,colname1]
+  exposure <- df[,colname2]
+  stratification <- df[,groupcol]
+  mhor(outcome, exposure, stratification)
 
 }
 
 # -------- Tabla de contingencia por estratos --------
 cont_t_s = function(df,colname1,colname2,groupcol){
   
-  tabla <- table(df[,colname1],df[,colname2], df[,groupcol])
-  addmargins(tabla)[,,c(11,1:10)]
-  
-  tabla
+  tabla = table(df)
+  tablas_parciales = margin.table(tabla,c(colname1,colname2,groupcol))
+  tablas_parciales
 
 }
 
 
 # ------ ODDS ratio por estrato -----------
 odds_s = function(df,colname1,colname2,groupcol){
+
   
-  tabla <- table(df[,colname1],df[,colname2], df[,groupcol])
-  addmargins(tabla)[,,c(11,1:10)]
+  tabla = table(df)
   
-  odds.ratio(tabla)
+  tablas_parciales = margin.table(tabla,c(colname1,colname2,groupcol))
+  ods_estrat = as.vector(apply(tablas_parciales,3,odds.ratio))
+  ods_estrat
   
 }
 
@@ -251,8 +249,7 @@ odds_s = function(df,colname1,colname2,groupcol){
 # ------- Breslow-Day Test ------------
 bdt = function(df,colname1,colname2,groupcol){
   
-  tabla <- table(df[,colname1],df[,colname2], df[,groupcol])
-  addmargins(tabla)[,,c(11,1:10)]
-  
-  TestBreslow = BreslowDayTest(x = tabla)
+  tabla = table(df)
+  tablas_parciales <- margin.table(tabla,c(colname1,colname2,groupcol))
+  BreslowDayTest(x = tablas_parciales)
 }
